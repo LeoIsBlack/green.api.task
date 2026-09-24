@@ -138,12 +138,26 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /**
-   * Форматирование номера чата WhatsApp: добавляет @c.us если введен только номер
+   * Форматирование номера чата WhatsApp: добавляет @c.us если введен только номер.
+   * Автоматически заменяет ведущую «8» на «7» для номеров Казахстана и России
+   * (11 цифр начинающихся на 8 → международный формат +7...)
    */
   function formatChatId(value) {
     const clean = value.trim();
     if (!clean) return '';
-    return clean.includes('@') ? clean : `${clean.replace(/\D/g, '')}@c.us`;
+    // Уже содержит суффикс @c.us или @g.us — вернуть как есть
+    if (clean.includes('@')) return clean;
+
+    // Убрать всё кроме цифр
+    let digits = clean.replace(/\D/g, '');
+
+    // КЗ/РФ: 11 цифр, начинается на 8 → заменить на 7
+    // Пример: 87761985879 → 77761985879
+    if (digits.length === 11 && digits.startsWith('8')) {
+      digits = '7' + digits.slice(1);
+    }
+
+    return digits ? `${digits}@c.us` : '';
   }
 
   /**
