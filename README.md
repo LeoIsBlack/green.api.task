@@ -63,18 +63,16 @@ start index.html
 
 ## 🌐 Публикация на GitHub Pages
 
-1. Создайте публичный репозиторий на [GitHub](https://github.com/new) с именем: **`green-api-support-task`**
+1. Репозиторий на [GitHub](https://github.com/LeoIsBlack/green.api.task): **`green.api.task`**
 2. Отправьте код из терминала:
    ```bash
-   git remote add origin https://github.com/LeoIsBlack/green-api-support-task.git
-   git branch -M main
    git push -u origin main
    ```
 3. В настройках репозитория на GitHub перейдите в **Settings** -> **Pages**:
    - В разделе **Branch** выберите `main` и ветку `/ (root)`.
    - Нажмите **Save**.
 4. Через минуту ваша страница станет доступна по адресу:  
-   **https://LeoIsBlack.github.io/green-api-support-task/**
+   **https://LeoIsBlack.github.io/green.api.task/**
 
 ---
 
@@ -106,8 +104,8 @@ start index.html
 > 
 > 1. **Резюме:** [Прикреплено к письму в формате PDF]
 > 2. **Telegram для связи:** @ваш_логин
-> 3. **Репозиторий GitHub:** https://github.com/LeoIsBlack/green-api-support-task
-> 4. **Опубликованная страница:** https://LeoIsBlack.github.io/green-api-support-task/
+> 3. **Репозиторий GitHub:** https://github.com/LeoIsBlack/green.api.task
+> 4. **Опубликованная страница:** https://LeoIsBlack.github.io/green.api.task/
 > 5. **Видео-демонстрация / скриншоты:** [Ссылка на Google Drive / Loom / YouTube]
 > 
 > Буду рад обратной связи и возможности обсудить результаты на собеседовании.
