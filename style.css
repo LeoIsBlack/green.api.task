@@ -1,38 +1,40 @@
 /* ==========================================================================
-   GREEN-API Console — Fresh Green Design System
+   GREEN-API Console — Balanced Dark Theme
    ========================================================================== */
 
 :root {
-  /* Палитра */
-  --bg-deep: #050d0a;
-  --bg-dark: #091410;
-  --bg-card: #0e1c17;
-  --bg-section: #132119;
-  --bg-input: #0c1812;
-  --bg-input-focus: #101f18;
-  --border: #1e3329;
-  --border-light: #2a4a3a;
+  /* Нейтральный тёмный фон (не зелёный) */
+  --bg-deep: #0f1117;
+  --bg-dark: #13151c;
+  --bg-card: #181b24;
+  --bg-section: #1e2130;
+  --bg-input: #161921;
+  --bg-input-focus: #1a1e2a;
+  --border: #252a3a;
+  --border-light: #2e3448;
 
-  --text-primary: #e2ede8;
-  --text-secondary: #7aad94;
-  --text-muted: #4d7a63;
-  --text-placeholder: #3a5e4a;
+  /* Нейтральные цвета текста */
+  --text-primary: #e8eaf0;
+  --text-secondary: #8892a4;
+  --text-muted: #555f72;
+  --text-placeholder: #404858;
 
-  --green: #00c896;
-  --green-bright: #00ff9d;
-  --green-dim: #009e77;
-  --green-glow: rgba(0, 200, 150, 0.18);
-  --green-glow-strong: rgba(0, 200, 150, 0.32);
-  --green-glass: rgba(0, 200, 150, 0.07);
+  /* Зелёный только как акцент (GREEN-API бренд) */
+  --green: #22c55e;
+  --green-dim: #16a34a;
+  --green-glow: rgba(34, 197, 94, 0.15);
+  --green-glass: rgba(34, 197, 94, 0.06);
 
-  --btn-bg: #122019;
-  --btn-border: #1e3a2a;
-  --btn-hover: #1a2e22;
+  /* Кнопки */
+  --btn-bg: #1c2032;
+  --btn-border: #2a3045;
+  --btn-hover: #232840;
 
+  /* Метки методов */
   --get-color: #34d399;
-  --get-bg: rgba(52, 211, 153, 0.12);
-  --post-color: #60a5fa;
-  --post-bg: rgba(96, 165, 250, 0.12);
+  --get-bg: rgba(52, 211, 153, 0.1);
+  --post-color: #818cf8;
+  --post-bg: rgba(129, 140, 248, 0.1);
 
   --font-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-mono: Consolas, "Courier New", monospace;
@@ -48,10 +50,6 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-}
-
-html {
-  scroll-behavior: smooth;
 }
 
 body {
@@ -75,33 +73,35 @@ body {
   border: 0;
 }
 
-/* ========== Фоновые декоративные элементы ========== */
+/* ========== Фоновые декоративные орбы ========== */
 .bg-orb {
   position: fixed;
   border-radius: 50%;
-  filter: blur(100px);
+  filter: blur(120px);
   pointer-events: none;
   z-index: 0;
-  animation: orbFloat 8s ease-in-out infinite;
+  animation: orbFloat 10s ease-in-out infinite;
 }
 
 .orb-1 {
-  width: 500px; height: 500px;
-  background: radial-gradient(circle, rgba(0, 200, 150, 0.12) 0%, transparent 70%);
-  top: -150px; left: -100px;
+  width: 480px; height: 480px;
+  /* Мягкий фиолетово-синий акцент — не зелёный */
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.09) 0%, transparent 70%);
+  top: -150px; left: -80px;
   animation-delay: 0s;
 }
 
 .orb-2 {
-  width: 400px; height: 400px;
-  background: radial-gradient(circle, rgba(0, 200, 150, 0.08) 0%, transparent 70%);
-  bottom: -100px; right: -80px;
-  animation-delay: -4s;
+  width: 360px; height: 360px;
+  /* Лёгкий зелёный намёк — только в углу */
+  background: radial-gradient(circle, rgba(34, 197, 94, 0.06) 0%, transparent 70%);
+  bottom: -80px; right: -60px;
+  animation-delay: -5s;
 }
 
 @keyframes orbFloat {
   0%, 100% { transform: translateY(0) scale(1); }
-  50% { transform: translateY(-30px) scale(1.05); }
+  50% { transform: translateY(-25px) scale(1.04); }
 }
 
 /* ========== Основная разметка ========== */
@@ -123,15 +123,14 @@ body {
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);
   box-shadow:
-    0 0 0 1px rgba(0, 200, 150, 0.05),
-    0 32px 64px rgba(0, 0, 0, 0.6),
-    0 0 80px rgba(0, 200, 150, 0.04);
+    0 0 0 1px rgba(255, 255, 255, 0.03),
+    0 32px 64px rgba(0, 0, 0, 0.5);
   overflow: hidden;
-  animation: cardAppear 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: cardAppear 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes cardAppear {
-  from { opacity: 0; transform: translateY(20px) scale(0.98); }
+  from { opacity: 0; transform: translateY(18px) scale(0.98); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
@@ -141,26 +140,15 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 1rem 1.5rem;
-  background: linear-gradient(135deg, #0b1912 0%, #0e1f17 100%);
+  background: linear-gradient(135deg, #14172200 0%, #1a1d2a 100%);
+  background-color: #14172b;
   border-bottom: 1px solid var(--border);
-  position: relative;
-  overflow: hidden;
-}
-
-.console-header::after {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--green), transparent);
-  opacity: 0.3;
 }
 
 /* Лого-знак */
 .logo-mark {
   position: relative;
-  width: 36px;
-  height: 36px;
+  width: 34px; height: 34px;
   flex-shrink: 0;
 }
 
@@ -168,28 +156,28 @@ body {
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  border: 2px solid var(--green);
-  opacity: 0.6;
-  animation: ringPulse 2.5s ease-in-out infinite;
+  border: 1.5px solid var(--green);
+  opacity: 0.5;
+  animation: ringPulse 3s ease-in-out infinite;
 }
 
 .logo-dot {
   position: absolute;
-  inset: 7px;
+  inset: 8px;
   background: var(--green);
   border-radius: 50%;
-  box-shadow: 0 0 12px var(--green);
-  animation: dotGlow 2.5s ease-in-out infinite;
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.6);
+  animation: dotGlow 3s ease-in-out infinite;
 }
 
 @keyframes ringPulse {
-  0%, 100% { transform: scale(1); opacity: 0.6; }
-  50% { transform: scale(1.15); opacity: 1; }
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.12); opacity: 0.9; }
 }
 
 @keyframes dotGlow {
-  0%, 100% { box-shadow: 0 0 8px var(--green); }
-  50% { box-shadow: 0 0 20px var(--green), 0 0 40px rgba(0, 200, 150, 0.4); }
+  0%, 100% { box-shadow: 0 0 6px rgba(34, 197, 94, 0.5); }
+  50% { box-shadow: 0 0 16px rgba(34, 197, 94, 0.8), 0 0 30px rgba(34, 197, 94, 0.3); }
 }
 
 .header-title {
@@ -199,17 +187,16 @@ body {
 }
 
 .header-title h1 {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 700;
   color: var(--text-primary);
-  letter-spacing: -0.01em;
 }
 
 .header-sub {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   color: var(--text-muted);
   margin-top: 1px;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
@@ -218,8 +205,8 @@ body {
   display: flex;
   align-items: center;
   gap: 7px;
-  background: var(--green-glass);
-  border: 1px solid rgba(0, 200, 150, 0.2);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-light);
   border-radius: 20px;
   padding: 5px 14px;
   font-size: 0.78rem;
@@ -229,24 +216,23 @@ body {
 }
 
 .pulse-dot {
-  width: 8px; height: 8px;
+  width: 7px; height: 7px;
   border-radius: 50%;
   background: var(--green);
-  box-shadow: 0 0 0 0 rgba(0, 200, 150, 0.4);
-  animation: pulse 2s ease-in-out infinite;
+  box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
+  animation: pulse 2.5s ease-in-out infinite;
 }
 
 @keyframes pulse {
-  0% { box-shadow: 0 0 0 0 rgba(0, 200, 150, 0.5); }
-  70% { box-shadow: 0 0 0 8px rgba(0, 200, 150, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(0, 200, 150, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5); }
+  70% { box-shadow: 0 0 0 7px rgba(34, 197, 94, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
 }
 
 /* ========== Сетка консоли ========== */
 .console-grid {
   display: grid;
-  grid-template-columns: 350px 1fr;
-  gap: 0;
+  grid-template-columns: 340px 1fr;
   min-height: 560px;
 }
 
@@ -260,11 +246,11 @@ body {
 .col-methods {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 0.85rem;
   border-right: 1px solid var(--border);
   padding: 1.25rem;
-  gap: 0.85rem;
-  background: linear-gradient(180deg, var(--bg-card) 0%, rgba(12, 24, 18, 0.8) 100%);
+  background-color: #16192300;
+  background: linear-gradient(180deg, #16192350 0%, #13161f80 100%);
 }
 
 /* Карточка секции */
@@ -275,7 +261,7 @@ body {
   background: var(--bg-section);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 1rem;
+  padding: 0.95rem;
   position: relative;
   transition: border-color 0.25s, box-shadow 0.25s;
   animation: sectionIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
@@ -286,33 +272,18 @@ body {
 .card-section:nth-child(3) { animation-delay: 0.15s; }
 
 @keyframes sectionIn {
-  from { opacity: 0; transform: translateX(-10px); }
+  from { opacity: 0; transform: translateX(-8px); }
   to { opacity: 1; transform: translateX(0); }
 }
 
-.card-section::before {
-  content: '';
-  position: absolute;
-  left: 0; top: 10%; bottom: 10%;
-  width: 2px;
-  background: var(--green);
-  border-radius: 2px;
-  opacity: 0;
-  transition: opacity 0.25s;
-}
-
 .card-section:focus-within {
-  border-color: rgba(0, 200, 150, 0.3);
-  box-shadow: 0 0 0 1px rgba(0, 200, 150, 0.1), 0 4px 16px rgba(0, 0, 0, 0.3);
-}
-
-.card-section:focus-within::before {
-  opacity: 1;
+  border-color: rgba(99, 102, 241, 0.35);
+  box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.08), 0 4px 16px rgba(0, 0, 0, 0.25);
 }
 
 /* Метка секции */
 .section-label {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -320,10 +291,9 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-bottom: 2px;
 }
 
-/* Группа GET-методов */
+/* GET-методы */
 .method-group {
   display: flex;
   flex-direction: column;
@@ -333,7 +303,7 @@ body {
 .method-group-label {
   font-size: 0.7rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-muted);
 }
@@ -346,24 +316,24 @@ body {
 
 /* Метки методов */
 .method-badge {
-  font-size: 0.65rem;
+  font-size: 0.63rem;
   font-weight: 700;
   font-family: var(--font-mono);
   padding: 2px 6px;
   border-radius: 4px;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
 }
 
 .method-badge.get {
   background: var(--get-bg);
   color: var(--get-color);
-  border: 1px solid rgba(52, 211, 153, 0.25);
+  border: 1px solid rgba(52, 211, 153, 0.2);
 }
 
 .method-badge.post {
   background: var(--post-bg);
   color: var(--post-color);
-  border: 1px solid rgba(96, 165, 250, 0.25);
+  border: 1px solid rgba(129, 140, 248, 0.2);
 }
 
 /* ========== Поля ввода ========== */
@@ -379,12 +349,11 @@ body {
   left: 10px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 700;
-  color: var(--green-dim);
+  color: var(--text-muted);
   font-family: var(--font-mono);
   pointer-events: none;
-  letter-spacing: 0.03em;
   z-index: 1;
 }
 
@@ -411,8 +380,8 @@ body {
 
 .app-input:focus {
   background: var(--bg-input-focus);
-  border-color: var(--green-dim);
-  box-shadow: 0 0 0 3px var(--green-glow);
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
 }
 
 .has-action .app-input {
@@ -435,7 +404,7 @@ body {
 }
 
 .btn-icon:hover {
-  color: var(--green);
+  color: var(--text-primary);
 }
 
 .app-textarea {
@@ -447,7 +416,7 @@ body {
 .input-subtle {
   font-size: 0.82rem;
   font-family: var(--font-mono);
-  background: #080f0c;
+  background: #111318;
   color: var(--text-secondary);
 }
 
@@ -470,51 +439,27 @@ body {
   cursor: pointer;
   transition: all 0.2s;
   user-select: none;
-  overflow: hidden;
-}
-
-/* Ripple эффект */
-.app-btn::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, transparent 40%, rgba(0, 200, 150, 0.06) 100%);
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-
-.app-btn:hover::after { opacity: 1; }
-
-/* GET кнопки */
-.btn-get {
-  border-color: rgba(52, 211, 153, 0.2);
 }
 
 .btn-get:hover {
-  background: rgba(52, 211, 153, 0.08);
-  border-color: rgba(52, 211, 153, 0.4);
+  background: var(--get-bg);
+  border-color: rgba(52, 211, 153, 0.35);
   color: var(--get-color);
-  box-shadow: 0 0 12px rgba(52, 211, 153, 0.1), 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-/* POST кнопки */
-.btn-post {
-  background: linear-gradient(135deg, #0a1e2a 0%, #091524 100%);
-  border-color: rgba(96, 165, 250, 0.25);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 .btn-post:hover {
-  background: rgba(96, 165, 250, 0.1);
-  border-color: rgba(96, 165, 250, 0.45);
+  background: var(--post-bg);
+  border-color: rgba(129, 140, 248, 0.35);
   color: var(--post-color);
-  box-shadow: 0 0 12px rgba(96, 165, 250, 0.1), 0 2px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 .app-btn:active {
   transform: scale(0.98);
 }
 
-/* Загрузка кнопки */
+/* Загрузка */
 .btn-action.is-loading .btn-text { visibility: hidden; }
 .btn-action.is-loading .method-badge { visibility: hidden; }
 
@@ -522,7 +467,7 @@ body {
   display: none;
   position: absolute;
   width: 14px; height: 14px;
-  border: 2px solid rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.12);
   border-top-color: var(--green);
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
@@ -540,7 +485,6 @@ body {
   color: var(--text-muted);
   border-top: 1px solid var(--border);
   padding-top: 0.75rem;
-  margin-top: 0.15rem;
 }
 
 .host-details summary {
@@ -558,9 +502,8 @@ body {
 .col-response {
   display: flex;
   flex-direction: column;
-  gap: 0;
   padding: 1.25rem;
-  background: linear-gradient(180deg, rgba(9, 20, 16, 0.5) 0%, rgba(5, 13, 10, 0.8) 100%);
+  background: #111420;
 }
 
 .response-header {
@@ -597,28 +540,28 @@ body {
 }
 
 .status-2xx {
-  background: rgba(52, 211, 153, 0.12);
+  background: rgba(52, 211, 153, 0.1);
   color: #34d399;
-  border: 1px solid rgba(52, 211, 153, 0.3);
+  border: 1px solid rgba(52, 211, 153, 0.25);
 }
 
 .status-4xx {
-  background: rgba(251, 191, 36, 0.12);
+  background: rgba(251, 191, 36, 0.1);
   color: #fbbf24;
-  border: 1px solid rgba(251, 191, 36, 0.3);
+  border: 1px solid rgba(251, 191, 36, 0.25);
 }
 
 .status-5xx {
-  background: rgba(239, 68, 68, 0.12);
+  background: rgba(239, 68, 68, 0.1);
   color: #f87171;
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  border: 1px solid rgba(239, 68, 68, 0.25);
 }
 
 .tag-duration {
   font-size: 0.72rem;
   color: var(--text-muted);
   font-family: var(--font-mono);
-  background: rgba(255,255,255,0.04);
+  background: rgba(255, 255, 255, 0.04);
   padding: 2px 7px;
   border-radius: 4px;
   border: 1px solid var(--border);
@@ -647,8 +590,8 @@ body {
 
 .btn-sm:hover {
   background: var(--btn-hover);
-  color: var(--green);
-  border-color: rgba(0, 200, 150, 0.3);
+  color: var(--text-primary);
+  border-color: var(--border-light);
 }
 
 .btn-clear:hover {
@@ -661,13 +604,12 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  background: #060e0b;
+  background: #0d1018;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
   position: relative;
   min-height: 440px;
-  box-shadow: inset 0 2px 12px rgba(0, 0, 0, 0.4);
 }
 
 /* Пустое состояние */
@@ -681,12 +623,11 @@ body {
   gap: 12px;
   color: var(--text-placeholder);
   pointer-events: none;
-  transition: opacity 0.3s;
   animation: fadeIn 0.5s ease 0.3s both;
 }
 
 .response-empty svg {
-  opacity: 0.4;
+  opacity: 0.3;
 }
 
 .response-empty p {
@@ -706,6 +647,7 @@ body {
   height: 100%;
   min-height: 440px;
   background: transparent;
+  /* Светло-зелёный текст для JSON — это фирменно и читаемо */
   color: #4ade80;
   font-family: var(--font-mono);
   font-size: 0.85rem;
@@ -721,9 +663,10 @@ body {
   z-index: 1;
 }
 
-.response-field:not(:placeholder-shown) ~ .response-empty,
-.response-field:not([value=""]) {
-  display: none;
+.response-field::placeholder {
+  color: var(--text-placeholder);
+  font-family: var(--font-base);
+  font-style: italic;
 }
 
 .response-field::-webkit-scrollbar { width: 6px; }
@@ -736,13 +679,13 @@ body {
   background: var(--border-light);
 }
 
-/* ========== Нижний футер ========== */
+/* ========== Футер ========== */
 .console-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0.65rem 1.5rem;
-  background: linear-gradient(90deg, #080f0b 0%, #0a1410 100%);
+  background: #12141e;
   border-top: 1px solid var(--border);
   font-size: 0.75rem;
   color: var(--text-muted);
@@ -750,10 +693,10 @@ body {
 
 .footer-brand {
   font-weight: 600;
-  color: var(--green-dim);
+  color: var(--text-secondary);
 }
 
-/* ========== Тосты (уведомления) ========== */
+/* ========== Toast уведомления ========== */
 .toast-container {
   position: fixed;
   bottom: 24px; right: 24px;
@@ -765,18 +708,18 @@ body {
 }
 
 .toast {
-  background: #10201a;
+  background: #1c1f2e;
   color: var(--text-primary);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-light);
   padding: 0.7rem 1.1rem;
   border-radius: var(--radius);
   font-size: 0.84rem;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(0, 200, 150, 0.05);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
   pointer-events: auto;
   opacity: 0;
-  transform: translateX(20px);
+  transform: translateX(16px);
   transition: opacity 0.25s, transform 0.25s;
-  max-width: 320px;
+  max-width: 300px;
 }
 
 .toast.show {
@@ -785,5 +728,5 @@ body {
 }
 
 .toast-success { border-left: 3px solid var(--green); }
-.toast-error { border-left: 3px solid #ef4444; }
-.toast-warn { border-left: 3px solid #f59e0b; }
+.toast-error   { border-left: 3px solid #ef4444; }
+.toast-warn    { border-left: 3px solid #f59e0b; }
