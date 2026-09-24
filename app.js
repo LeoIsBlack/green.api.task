@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btnSendFile: document.getElementById('btnSendFileByUrl'),
 
     responseOutput: document.getElementById('responseOutput'),
+    responseEmpty: document.getElementById('responseEmpty'),
     statusTag: document.getElementById('statusTag'),
     durationTag: document.getElementById('durationTag'),
     btnCopy: document.getElementById('btnCopyResponse'),
@@ -73,6 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
     el.durationTag.style.display = 'none';
     el.btnCopy.style.display = 'none';
     el.badgeText.textContent = 'Готов к работе';
+    if (el.responseEmpty) el.responseEmpty.style.display = 'flex';
     showToast('Поле ответа очищено', 'info');
   });
 
@@ -186,7 +188,8 @@ document.addEventListener('DOMContentLoaded', () => {
       ? JSON.stringify(data, null, 2)
       : String(data);
 
-    el.btnCopy.style.display = 'inline-block';
+    if (el.responseEmpty) el.responseEmpty.style.display = 'none';
+    el.btnCopy.style.display = 'inline-flex';
     el.statusTag.style.display = 'inline-block';
     el.durationTag.style.display = 'inline-block';
 
