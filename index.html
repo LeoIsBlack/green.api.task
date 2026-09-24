@@ -11,16 +11,12 @@
 </head>
 
 <body>
-  <!-- Фоновые декоративные орбы -->
   <div class="bg-orb orb-1" aria-hidden="true"></div>
   <div class="bg-orb orb-2" aria-hidden="true"></div>
-
-  <!-- Световое пятно следует за курсором -->
   <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
 
   <div class="app-layout">
     <div class="console-card">
-      <!-- Шапка консоли -->
       <header class="console-header">
         <div class="header-title">
           <div class="logo-mark" aria-hidden="true">
@@ -36,7 +32,6 @@
           <span class="pulse-dot" aria-hidden="true"></span>
           <span id="connectionBadgeText">Готов к работе</span>
         </div>
-        <!-- Кнопка справки -->
         <button type="button" class="btn-help" id="btnHelp" aria-label="Как работает?">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="10" />
@@ -47,7 +42,6 @@
         </button>
       </header>
 
-      <!-- Модальное окно: Как работает? -->
       <div class="help-overlay" id="helpOverlay" aria-hidden="true">
         <div class="help-modal" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
           <div class="help-header">
@@ -113,13 +107,9 @@
         </div>
       </div>
 
-      <!-- Основная сетка: 2 колонки -->
       <main class="console-grid">
-
-        <!-- Левая колонка: параметры и вызовы методов -->
         <section class="col-methods" aria-label="Параметры и методы">
 
-          <!-- Авторизационные данные -->
           <div class="card-section">
             <div class="section-label">Авторизация</div>
             <div class="input-wrap">
@@ -130,19 +120,17 @@
             </div>
             <div class="input-wrap has-action">
               <label for="apiTokenInstance" class="sr-only">ApiTokenInstance</label>
-              <span class="input-prefix" aria-hidden="true">🔑</span>
+              <span class="input-prefix" aria-hidden="true">TK</span>
               <input type="password" id="apiTokenInstance" class="app-input has-prefix" placeholder="ApiTokenInstance"
                 autocomplete="off" spellcheck="false" required>
               <button type="button" class="btn-eye" id="btnToggleToken" title="Показать/скрыть токен"
                 aria-label="Показать/скрыть токен" aria-pressed="false">
                 <span class="eye-icon">
-                  <!-- Глаз открыт -->
                   <svg class="icon-eye-open" width="17" height="17" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="1.8">
                     <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
                     <circle cx="12" cy="12" r="3" />
                   </svg>
-                  <!-- Глаз закрыт -->
                   <svg class="icon-eye-off" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                     stroke-width="1.8">
                     <path d="m2 2 20 20" />
@@ -155,7 +143,6 @@
             </div>
           </div>
 
-          <!-- Кнопки инстанса -->
           <div class="method-group">
             <div class="method-group-label">GET методы</div>
             <div class="btn-group">
@@ -172,7 +159,6 @@
             </div>
           </div>
 
-          <!-- Отправка сообщения (sendMessage) -->
           <div class="card-section">
             <div class="section-label">
               <span class="method-badge post">POST</span>
@@ -192,7 +178,6 @@
             </button>
           </div>
 
-          <!-- Отправка файла (С устройства / По ссылке) -->
           <div class="card-section">
             <div class="section-label">
               <span class="method-badge post">POST</span>
@@ -203,18 +188,19 @@
               <input type="text" id="chatIdFile" class="app-input" placeholder="77761985879" autocomplete="off">
             </div>
 
-            <!-- Переключатель: С устройства / По ссылке -->
             <div class="file-tabs">
               <button type="button" class="file-tab active" id="tabByFile">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="tab-icon">
-                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
-                  <line x1="12" y1="11" x2="12" y2="17"/>
-                  <polyline points="9 14 12 11 15 14"/>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  class="tab-icon">
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                  <line x1="12" y1="11" x2="12" y2="17" />
+                  <polyline points="9 14 12 11 15 14" />
                 </svg>
                 Выбрать файл
               </button>
               <button type="button" class="file-tab" id="tabByUrl">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="tab-icon">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  class="tab-icon">
                   <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
                   <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
                 </svg>
@@ -222,18 +208,15 @@
               </button>
             </div>
 
-            <!-- Панель: Выбор файла с устройства -->
             <div id="panelFile">
               <input type="file" id="fileInput" class="sr-only">
 
-              <!-- Зона клика / Drag & Drop -->
               <div class="drop-zone" id="dropZone" role="button" tabindex="0">
                 <div class="drop-icon-circle">
-                  <!-- Значок: папка с загрузкой -->
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
-                    <line x1="12" y1="11" x2="12" y2="17"/>
-                    <polyline points="9 14 12 11 15 14"/>
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                    <line x1="12" y1="11" x2="12" y2="17" />
+                    <polyline points="9 14 12 11 15 14" />
                   </svg>
                 </div>
                 <div class="drop-text-group">
@@ -242,7 +225,6 @@
                 </div>
               </div>
 
-              <!-- Карточка выбранного файла (появляется при выборе) -->
               <div class="file-preview-card" id="filePreviewCard" style="display: none;">
                 <div class="file-preview-thumb" id="filePreviewThumb"></div>
                 <div class="file-preview-details">
@@ -257,14 +239,13 @@
                 </button>
               </div>
 
-              <!-- Опциональная подпись к файлу -->
               <div class="input-wrap input-wrap--caption">
                 <label for="fileCaption" class="sr-only">Подпись к файлу</label>
-                <input type="text" id="fileCaption" class="app-input" placeholder="Подпись (необязательно)" autocomplete="off">
+                <input type="text" id="fileCaption" class="app-input" placeholder="Подпись (необязательно)"
+                  autocomplete="off">
               </div>
             </div>
 
-            <!-- Панель: По прямой ссылке (URL) -->
             <div id="panelUrl" style="display: none;">
               <div class="input-wrap">
                 <label for="fileUrl" class="sr-only">Ссылка на файл</label>
@@ -274,9 +255,12 @@
               <div class="file-presets">
                 <span class="presets-title">Примеры в 1 клик:</span>
                 <div class="preset-chips">
-                  <button type="button" class="preset-chip" data-url="https://green-api.com/docs/images/logo.png">🖼️ PNG лого</button>
-                  <button type="button" class="preset-chip" data-url="https://picsum.photos/600/400.jpg">📷 JPG фото</button>
-                  <button type="button" class="preset-chip" data-url="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf">📄 PDF файл</button>
+                  <button type="button" class="preset-chip" data-url="https://green-api.com/docs/images/logo.png">PNG
+                    лого</button>
+                  <button type="button" class="preset-chip" data-url="https://picsum.photos/600/400.jpg">JPG
+                    фото</button>
+                  <button type="button" class="preset-chip"
+                    data-url="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf">PDF файл</button>
                 </div>
               </div>
             </div>
@@ -288,7 +272,6 @@
           </div>
 
 
-          <!-- Настройка хоста API -->
           <details class="host-details">
             <summary>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -305,7 +288,6 @@
 
         </section>
 
-        <!-- Правая колонка: окно ответа -->
         <section class="col-response" aria-label="Поле ответа">
           <div class="response-header">
             <div class="response-title-group">
@@ -347,7 +329,6 @@
 
       </main>
 
-      <!-- Нижняя строка с подписью -->
       <footer class="console-footer">
         <span>GREEN-API Integration Console</span>
         <span class="footer-brand">Burambay Nurdaulet © 2026</span>
@@ -355,12 +336,10 @@
     </div>
   </div>
 
-  <!-- Всплывающие уведомления (Toast) -->
   <div id="toastContainer" class="toast-container" aria-live="polite"></div>
 
   <script src="app.js"></script>
 
-  <!-- Анимация следования за курсором -->
   <script>
     (function () {
       const glow = document.getElementById('cursorGlow');
@@ -371,7 +350,6 @@
       let cx = mx, cy = my;
       let raf;
 
-      // Плавная интерполяция (lerp) — эффект «инерции»
       function lerp(a, b, t) { return a + (b - a) * t; }
 
       function animate() {
@@ -387,7 +365,6 @@
         glow.style.opacity = '1';
       });
 
-      // Скрываем когда курсор уходит из окна
       document.addEventListener('mouseleave', () => {
         glow.style.opacity = '0';
       });

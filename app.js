@@ -1,10 +1,4 @@
-/**
- * GREEN-API Integration Console
- * Реализация методов: getSettings, getStateInstance, sendMessage, sendFileByUrl
- */
-
 document.addEventListener('DOMContentLoaded', () => {
-  // DOM Элементы
   const el = {
     idInstance: document.getElementById('idInstance'),
     apiToken: document.getElementById('apiTokenInstance'),
@@ -29,13 +23,11 @@ document.addEventListener('DOMContentLoaded', () => {
     btnSendFile: document.getElementById('btnSendFile'),
     btnSendFileText: document.getElementById('btnSendFileText'),
 
-    // Режимы отправки файла
     tabByFile: document.getElementById('tabByFile'),
     tabByUrl: document.getElementById('tabByUrl'),
     panelFile: document.getElementById('panelFile'),
     panelUrl: document.getElementById('panelUrl'),
 
-    // Выбор файла с устройства
     fileInput: document.getElementById('fileInput'),
     dropZone: document.getElementById('dropZone'),
     filePreviewCard: document.getElementById('filePreviewCard'),
@@ -54,37 +46,31 @@ document.addEventListener('DOMContentLoaded', () => {
     toastBox: document.getElementById('toastContainer')
   };
 
-  // Состояние выбора файла
-  let fileMode = 'file';       // 'file' (с устройства) | 'url' (по ссылке)
-  let selectedFile = null;     // Выбранный объект File
+  let fileMode = 'file';
+  let selectedFile = null;
 
-  // Ключи LocalStorage для сохранения данных инстанса
   const STORAGE_KEYS = {
     ID: 'green_api_id_instance',
     TOKEN: 'green_api_token_instance',
     HOST: 'green_api_host'
   };
 
-  // 1. Восстановление сохраненных учетных данных
   el.idInstance.value = localStorage.getItem(STORAGE_KEYS.ID) || '';
   el.apiToken.value = localStorage.getItem(STORAGE_KEYS.TOKEN) || '';
   if (localStorage.getItem(STORAGE_KEYS.HOST)) {
     el.apiHost.value = localStorage.getItem(STORAGE_KEYS.HOST);
   }
 
-  // 2. Автосохранение при вводе
   el.idInstance.addEventListener('input', (e) => localStorage.setItem(STORAGE_KEYS.ID, e.target.value.trim()));
   el.apiToken.addEventListener('input', (e) => localStorage.setItem(STORAGE_KEYS.TOKEN, e.target.value.trim()));
   el.apiHost.addEventListener('input', (e) => localStorage.setItem(STORAGE_KEYS.HOST, e.target.value.trim()));
 
-  // 3. Показать / Скрыть пароль токена (анимированный глазок)
   el.btnToggleToken.addEventListener('click', () => {
     const isPass = el.apiToken.type === 'password';
     el.apiToken.type = isPass ? 'text' : 'password';
     el.btnToggleToken.setAttribute('aria-pressed', isPass ? 'true' : 'false');
   });
 
-  // 3b. Модал «Как работает?»
   function openHelp() {
     el.helpOverlay.classList.add('is-open');
     el.helpOverlay.setAttribute('aria-hidden', 'false');
@@ -100,17 +86,14 @@ document.addEventListener('DOMContentLoaded', () => {
   el.btnHelp.addEventListener('click', openHelp);
   el.helpClose.addEventListener('click', closeHelp);
 
-  // Закрыть по клику на фон
   el.helpOverlay.addEventListener('click', (e) => {
     if (e.target === el.helpOverlay) closeHelp();
   });
 
-  // Закрыть по Escape
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && el.helpOverlay.classList.contains('is-open')) closeHelp();
   });
 
-  // 4. Переключение вкладок: С устройства / По ссылке
   function switchFileTab(mode) {
     fileMode = mode;
     if (mode === 'file') {
@@ -133,7 +116,6 @@ document.addEventListener('DOMContentLoaded', () => {
   el.tabByFile.addEventListener('click', () => switchFileTab('file'));
   el.tabByUrl.addEventListener('click', () => switchFileTab('url'));
 
-  // Быстрые примеры ссылок на файлы в 1 клик
   document.querySelectorAll('.preset-chip').forEach((chip) => {
     chip.addEventListener('click', () => {
       const url = chip.getAttribute('data-url');
@@ -145,14 +127,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Форматирование размера файла для предпросмотра
   function formatBytes(bytes) {
     if (bytes < 1024) return bytes + ' B';
     if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
     return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
   }
 
-  // Обработка выбранного файла (из проводника или Drag & Drop)
   function handleFileSelected(file) {
     if (!file) return;
     selectedFile = file;
@@ -179,7 +159,6 @@ document.addEventListener('DOMContentLoaded', () => {
     showToast(`Файл выбран: ${file.name}`, 'info');
   }
 
-  // Сброс выбранного файла
   function clearSelectedFile() {
     selectedFile = null;
     el.fileInput.value = '';
@@ -188,7 +167,6 @@ document.addEventListener('DOMContentLoaded', () => {
     el.dropZone.style.display = 'flex';
   }
 
-  // Клик по дропзоне открывает выбор файла
   el.dropZone.addEventListener('click', () => el.fileInput.click());
   el.dropZone.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -197,7 +175,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Drag & Drop
   el.dropZone.addEventListener('dragover', (e) => {
     e.preventDefault();
     el.dropZone.classList.add('drag-over');
@@ -213,27 +190,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Выбор файла через стандартное системное окно
   el.fileInput.addEventListener('change', () => {
     if (el.fileInput.files && el.fileInput.files[0]) {
       handleFileSelected(el.fileInput.files[0]);
     }
   });
 
-  // Удаление файла
   el.btnRemoveFile.addEventListener('click', (e) => {
     e.stopPropagation();
     clearSelectedFile();
   });
 
-  // 5. Привязка обработчиков методов GREEN-API
   el.btnGetSettings.addEventListener('click', () => executeRequest(el.btnGetSettings, 'GET', 'getSettings'));
   el.btnGetStateInstance.addEventListener('click', () => executeRequest(el.btnGetStateInstance, 'GET', 'getStateInstance'));
   el.btnSendMsg.addEventListener('click', handleSendMessage);
   el.btnSendFile.addEventListener('click', handleSendFile);
 
-
-  // 5. Очистка и копирование ответа
   el.btnClear.addEventListener('click', () => {
     el.responseOutput.value = '';
     el.statusTag.style.display = 'none';
@@ -255,9 +227,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  /**
-   * Получение и валидация учетных данных инстанса
-   */
   function getCredentials() {
     const idInstance = el.idInstance.value.trim();
     const apiTokenInstance = el.apiToken.value.trim();
@@ -276,22 +245,13 @@ document.addEventListener('DOMContentLoaded', () => {
     return { idInstance, apiTokenInstance, host };
   }
 
-  /**
-   * Форматирование номера чата WhatsApp: добавляет @c.us если введен только номер.
-   * Автоматически заменяет ведущую «8» на «7» для номеров Казахстана и России
-   * (11 цифр начинающихся на 8 → международный формат +7...)
-   */
   function formatChatId(value) {
     const clean = value.trim();
     if (!clean) return '';
-    // Уже содержит суффикс @c.us или @g.us — вернуть как есть
     if (clean.includes('@')) return clean;
 
-    // Убрать всё кроме цифр
     let digits = clean.replace(/\D/g, '');
 
-    // КЗ/РФ: 11 цифр, начинается на 8 → заменить на 7
-    // Пример: 87761985879 → 77761985879
     if (digits.length === 11 && digits.startsWith('8')) {
       digits = '7' + digits.slice(1);
     }
@@ -299,9 +259,6 @@ document.addEventListener('DOMContentLoaded', () => {
     return digits ? `${digits}@c.us` : '';
   }
 
-  /**
-   * Извлечение имени файла из URL
-   */
   function getFileNameFromUrl(url) {
     try {
       const parts = new URL(url).pathname.split('/').filter(Boolean);
@@ -311,15 +268,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  /**
-   * Универсальный обработчик HTTP-запросов к GREEN-API
-   */
   async function executeRequest(button, httpMethod, apiMethod, payload = null) {
     const creds = getCredentials();
     if (!creds) return;
 
     let host = creds.host;
-    // Для методов загрузки файлов официальная документация GREEN-API рекомендует media-хост
     if (apiMethod === 'sendFileByUpload' || apiMethod === 'uploadFile') {
       if (host.includes('api.green-api.com')) {
         host = host.replace('api.green-api.com', 'media.green-api.com');
@@ -343,7 +296,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (payload !== null) {
         if (payload instanceof FormData) {
-          // При FormData браузер сам установит Content-Type с boundary
           requestOptions.body = payload;
         } else {
           requestOptions.headers['Content-Type'] = 'application/json';
@@ -355,7 +307,6 @@ document.addEventListener('DOMContentLoaded', () => {
       try {
         response = await fetch(url, requestOptions);
       } catch (fetchErr) {
-        // Если media-хост недоступен, пробуем базовый host инстанса
         if (host !== creds.host) {
           const fallbackUrl = `${creds.host}/waInstance${creds.idInstance}/${apiMethod}/${creds.apiTokenInstance}`;
           response = await fetch(fallbackUrl, requestOptions);
@@ -387,9 +338,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  /**
-   * Отображение результатов вызова в поле «Ответ:»
-   */
   function renderResponse(status, statusText, data, durationMs) {
     el.responseOutput.value = typeof data === 'object' && data !== null
       ? JSON.stringify(data, null, 2)
@@ -417,9 +365,6 @@ document.addEventListener('DOMContentLoaded', () => {
     el.durationTag.textContent = `${durationMs} ms`;
   }
 
-  /**
-   * Обработчик метода sendMessage
-   */
   async function handleSendMessage() {
     const rawChatId = el.chatIdMsg.value.trim();
     const message = el.msgText.value.trim();
@@ -443,9 +388,6 @@ document.addEventListener('DOMContentLoaded', () => {
     await executeRequest(el.btnSendMsg, 'POST', 'sendMessage', payload);
   }
 
-  /**
-   * Обработчик отправки файла: С устройства (sendFileByUpload) или по ссылке (sendFileByUrl)
-   */
   async function handleSendFile() {
     const rawChatId = el.chatIdFile.value.trim();
 
@@ -492,9 +434,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  /**
-   * Лаконичные всплывающие уведомления (Toast)
-   */
   function showToast(message, type = 'info') {
     if (!el.toastBox) return;
 
