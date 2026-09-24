@@ -1,388 +1,281 @@
 /**
- * GREEN-API Integration Console Logic
- * Implementation of: getSettings, getStateInstance, sendMessage, sendFileByUrl
+ * GREEN-API Integration Console
+ * Реализация методов: getSettings, getStateInstance, sendMessage, sendFileByUrl
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // DOM Elements
-  const idInstanceInput = document.getElementById('idInstance');
-  const apiTokenInstanceInput = document.getElementById('apiTokenInstance');
-  const apiUrlHostInput = document.getElementById('apiUrlHost');
-  const btnToggleToken = document.getElementById('btnToggleToken');
-  const eyeIcon = document.getElementById('eyeIcon');
+  // DOM Элементы
+  const el = {
+    idInstance: document.getElementById('idInstance'),
+    apiToken: document.getElementById('apiTokenInstance'),
+    apiHost: document.getElementById('apiUrlHost'),
+    btnToggleToken: document.getElementById('btnToggleToken'),
+    eyeIcon: document.getElementById('eyeIcon'),
 
-  const btnGetSettings = document.getElementById('btnGetSettings');
-  const btnGetStateInstance = document.getElementById('btnGetStateInstance');
+    btnGetSettings: document.getElementById('btnGetSettings'),
+    btnGetStateInstance: document.getElementById('btnGetStateInstance'),
 
-  const chatIdMessageInput = document.getElementById('chatIdMessage');
-  const messageTextInput = document.getElementById('messageText');
-  const btnSendMessage = document.getElementById('btnSendMessage');
+    chatIdMsg: document.getElementById('chatIdMessage'),
+    msgText: document.getElementById('messageText'),
+    btnSendMsg: document.getElementById('btnSendMessage'),
 
-  const chatIdFileInput = document.getElementById('chatIdFile');
-  const fileUrlInput = document.getElementById('fileUrl');
-  const btnSendFileByUrl = document.getElementById('btnSendFileByUrl');
+    chatIdFile: document.getElementById('chatIdFile'),
+    fileUrl: document.getElementById('fileUrl'),
+    btnSendFile: document.getElementById('btnSendFileByUrl'),
 
-  const responseOutput = document.getElementById('responseOutput');
-  const statusTag = document.getElementById('statusTag');
-  const durationTag = document.getElementById('durationTag');
-  const btnCopyResponse = document.getElementById('btnCopyResponse');
-  const copyFeedback = document.getElementById('copyFeedback');
-  const btnRefresh = document.getElementById('btnRefresh');
-  const connectionBadgeText = document.getElementById('connectionBadgeText');
-  const toastContainer = document.getElementById('toastContainer');
-
-  // LocalStorage Keys
-  const STORAGE_KEYS = {
-    ID_INSTANCE: 'green_api_id_instance',
-    API_TOKEN: 'green_api_token_instance',
-    API_HOST: 'green_api_host'
+    responseOutput: document.getElementById('responseOutput'),
+    statusTag: document.getElementById('statusTag'),
+    durationTag: document.getElementById('durationTag'),
+    btnCopy: document.getElementById('btnCopyResponse'),
+    btnClear: document.getElementById('btnClearResponse'),
+    badgeText: document.getElementById('connectionBadgeText'),
+    toastBox: document.getElementById('toastContainer')
   };
 
-  // 1. Restore saved credentials
-  restoreCredentials();
+  // Ключи LocalStorage для сохранения данных инстанса
+  const STORAGE_KEYS = {
+    ID: 'green_api_id_instance',
+    TOKEN: 'green_api_token_instance',
+    HOST: 'green_api_host'
+  };
 
-  // 2. Event Listeners for Saving Credentials
-  idInstanceInput.addEventListener('input', () => {
-    localStorage.setItem(STORAGE_KEYS.ID_INSTANCE, idInstanceInput.value.trim());
-  });
-
-  apiTokenInstanceInput.addEventListener('input', () => {
-    localStorage.setItem(STORAGE_KEYS.API_TOKEN, apiTokenInstanceInput.value.trim());
-  });
-
-  apiUrlHostInput.addEventListener('input', () => {
-    localStorage.setItem(STORAGE_KEYS.API_HOST, apiUrlHostInput.value.trim());
-  });
-
-  // 3. Password Visibility Toggle
-  btnToggleToken.addEventListener('click', () => {
-    const isPassword = apiTokenInstanceInput.type === 'password';
-    apiTokenInstanceInput.type = isPassword ? 'text' : 'password';
-    eyeIcon.innerHTML = isPassword
-      ? `<path d="m2 2 20 20"/><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/>`
-      : `<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>`;
-  });
-
-  // 4. Method Action Listeners
-  btnGetSettings.addEventListener('click', () => handleGetSettings());
-  btnGetStateInstance.addEventListener('click', () => handleGetStateInstance());
-  btnSendMessage.addEventListener('click', () => handleSendMessage());
-  btnSendFileByUrl.addEventListener('click', () => handleSendFileByUrl());
-
-  // 5. Copy Response Listener
-  btnCopyResponse.addEventListener('click', () => {
-    const text = responseOutput.value;
-    if (!text) return;
-
-    navigator.clipboard.writeText(text).then(() => {
-      copyFeedback.textContent = 'Скопировано!';
-      setTimeout(() => {
-        copyFeedback.textContent = 'Копировать';
-      }, 2000);
-    }).catch(err => {
-      showToast('Не удалось скопировать', 'error');
-    });
-  });
-
-  // 6. Refresh / Reset Listener
-  btnRefresh.addEventListener('click', () => {
-    responseOutput.value = '';
-    statusTag.style.display = 'none';
-    durationTag.style.display = 'none';
-    btnCopyResponse.style.display = 'none';
-    connectionBadgeText.textContent = 'API Ready';
-    showToast('Консоль очищена', 'info');
-  });
-
-  /**
-   * Helper: Restore stored credentials from LocalStorage
-   */
-  function restoreCredentials() {
-    const savedId = localStorage.getItem(STORAGE_KEYS.ID_INSTANCE);
-    const savedToken = localStorage.getItem(STORAGE_KEYS.API_TOKEN);
-    const savedHost = localStorage.getItem(STORAGE_KEYS.API_HOST);
-
-    if (savedId) idInstanceInput.value = savedId;
-    if (savedToken) apiTokenInstanceInput.value = savedToken;
-    if (savedHost) apiUrlHostInput.value = savedHost;
+  // 1. Восстановление сохраненных учетных данных
+  el.idInstance.value = localStorage.getItem(STORAGE_KEYS.ID) || '';
+  el.apiToken.value = localStorage.getItem(STORAGE_KEYS.TOKEN) || '';
+  if (localStorage.getItem(STORAGE_KEYS.HOST)) {
+    el.apiHost.value = localStorage.getItem(STORAGE_KEYS.HOST);
   }
 
+  // 2. Автосохранение при вводе
+  el.idInstance.addEventListener('input', (e) => localStorage.setItem(STORAGE_KEYS.ID, e.target.value.trim()));
+  el.apiToken.addEventListener('input', (e) => localStorage.setItem(STORAGE_KEYS.TOKEN, e.target.value.trim()));
+  el.apiHost.addEventListener('input', (e) => localStorage.setItem(STORAGE_KEYS.HOST, e.target.value.trim()));
+
+  // 3. Показать / Скрыть пароль токена
+  el.btnToggleToken.addEventListener('click', () => {
+    const isPass = el.apiToken.type === 'password';
+    el.apiToken.type = isPass ? 'text' : 'password';
+    el.eyeIcon.innerHTML = isPass
+      ? '<path d="m2 2 20 20"/><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/>'
+      : '<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>';
+  });
+
+  // 4. Привязка обработчиков методов GREEN-API
+  el.btnGetSettings.addEventListener('click', () => executeRequest(el.btnGetSettings, 'GET', 'getSettings'));
+  el.btnGetStateInstance.addEventListener('click', () => executeRequest(el.btnGetStateInstance, 'GET', 'getStateInstance'));
+  el.btnSendMsg.addEventListener('click', handleSendMessage);
+  el.btnSendFile.addEventListener('click', handleSendFileByUrl);
+
+  // 5. Очистка и копирование ответа
+  el.btnClear.addEventListener('click', () => {
+    el.responseOutput.value = '';
+    el.statusTag.style.display = 'none';
+    el.durationTag.style.display = 'none';
+    el.btnCopy.style.display = 'none';
+    el.badgeText.textContent = 'Готов к работе';
+    showToast('Поле ответа очищено', 'info');
+  });
+
+  el.btnCopy.addEventListener('click', async () => {
+    if (!el.responseOutput.value) return;
+    try {
+      await navigator.clipboard.writeText(el.responseOutput.value);
+      el.btnCopy.textContent = 'Скопировано!';
+      setTimeout(() => { el.btnCopy.textContent = 'Копировать'; }, 1800);
+    } catch {
+      showToast('Не удалось скопировать', 'error');
+    }
+  });
+
   /**
-   * Helper: Get base parameters and validate
+   * Получение и валидация учетных данных инстанса
    */
   function getCredentials() {
-    const idInstance = idInstanceInput.value.trim();
-    const apiTokenInstance = apiTokenInstanceInput.value.trim();
-    let host = apiUrlHostInput.value.trim() || 'https://api.green-api.com';
-
-    // Remove trailing slash if present
-    host = host.replace(/\/+$/, '');
+    const idInstance = el.idInstance.value.trim();
+    const apiTokenInstance = el.apiToken.value.trim();
+    const host = (el.apiHost.value.trim() || 'https://api.green-api.com').replace(/\/+$/, '');
 
     if (!idInstance) {
-      showToast('Пожалуйста, введите idInstance', 'error');
-      idInstanceInput.focus();
+      showToast('Введите idInstance', 'error');
+      el.idInstance.focus();
       return null;
     }
-
     if (!apiTokenInstance) {
-      showToast('Пожалуйста, введите ApiTokenInstance', 'error');
-      apiTokenInstanceInput.focus();
+      showToast('Введите ApiTokenInstance', 'error');
+      el.apiToken.focus();
       return null;
     }
-
     return { idInstance, apiTokenInstance, host };
   }
 
   /**
-   * Helper: Format WhatsApp Chat ID
-   * Appends @c.us if only phone number digits are entered.
-   * Keeps existing suffix (@c.us, @g.us, @lid) intact.
+   * Форматирование номера чата WhatsApp: добавляет @c.us если введен только номер
    */
-  function formatChatId(raw) {
-    if (!raw) return '';
-    let val = raw.trim();
-    if (val.includes('@')) {
-      return val;
-    }
-    // Remove '+' and any non-numeric characters for clean phone number
-    const cleaned = val.replace(/\D/g, '');
-    return cleaned ? `${cleaned}@c.us` : '';
+  function formatChatId(value) {
+    const clean = value.trim();
+    if (!clean) return '';
+    return clean.includes('@') ? clean : `${clean.replace(/\D/g, '')}@c.us`;
   }
 
   /**
-   * Helper: Extract filename from URL or fallback
+   * Извлечение имени файла из URL
    */
-  function extractFileName(url) {
+  function getFileNameFromUrl(url) {
     try {
-      const parsedUrl = new URL(url);
-      const pathname = parsedUrl.pathname;
-      const name = pathname.substring(pathname.lastIndexOf('/') + 1);
-      return name || 'file.png';
+      const parts = new URL(url).pathname.split('/').filter(Boolean);
+      return parts.pop() || 'file.png';
     } catch {
-      const match = url.match(/\/([^\/?#]+)[^\/]*$/);
-      return match ? match[1] : 'file.png';
+      return 'file.png';
     }
   }
 
   /**
-   * Helper: Set loading state on button
+   * Универсальный обработчик HTTP-запросов к GREEN-API
    */
-  function setLoading(button, isLoading) {
-    if (isLoading) {
-      button.classList.add('is-loading');
-      button.disabled = true;
-    } else {
+  async function executeRequest(button, httpMethod, apiMethod, payload = null) {
+    const creds = getCredentials();
+    if (!creds) return;
+
+    const url = `${creds.host}/waInstance${creds.idInstance}/${apiMethod}/${creds.apiTokenInstance}`;
+
+    button.classList.add('is-loading');
+    button.disabled = true;
+
+    const startTime = performance.now();
+
+    try {
+      const requestOptions = {
+        method: httpMethod,
+        headers: {}
+      };
+
+      if (payload !== null) {
+        requestOptions.headers['Content-Type'] = 'application/json';
+        requestOptions.body = JSON.stringify(payload);
+      }
+
+      const response = await fetch(url, requestOptions);
+      const duration = Math.round(performance.now() - startTime);
+
+      let responseData;
+      const text = await response.text();
+      try {
+        responseData = JSON.parse(text);
+      } catch {
+        responseData = text;
+      }
+
+      renderResponse(response.status, response.statusText, responseData, duration);
+      showToast(response.ok ? `Успешно: ${apiMethod}` : `Ошибка ${response.status}`, response.ok ? 'success' : 'warn');
+
+    } catch (err) {
+      const duration = Math.round(performance.now() - startTime);
+      renderResponse(0, 'Network Error', { error: true, message: err.message }, duration);
+      showToast('Ошибка сети при выполнении запроса', 'error');
+    } finally {
       button.classList.remove('is-loading');
       button.disabled = false;
     }
   }
 
   /**
-   * Helper: Display method response in the output container
+   * Отображение результатов вызова в поле «Ответ:»
    */
-  function displayResponse(status, statusText, data, durationMs) {
-    let formattedText = '';
-    if (typeof data === 'object' && data !== null) {
-      formattedText = JSON.stringify(data, null, 2);
-    } else {
-      formattedText = String(data);
-    }
+  function renderResponse(status, statusText, data, durationMs) {
+    el.responseOutput.value = typeof data === 'object' && data !== null
+      ? JSON.stringify(data, null, 2)
+      : String(data);
 
-    responseOutput.value = formattedText;
-    btnCopyResponse.style.display = 'inline-flex';
+    el.btnCopy.style.display = 'inline-block';
+    el.statusTag.style.display = 'inline-block';
+    el.durationTag.style.display = 'inline-block';
 
-    // Update status badge
-    statusTag.style.display = 'inline-block';
-    statusTag.className = 'status-tag';
-    statusTag.textContent = `${status} ${statusText}`;
+    el.statusTag.textContent = `${status || 'ERR'} ${statusText}`;
+    el.statusTag.className = 'tag-status';
 
     if (status >= 200 && status < 300) {
-      statusTag.classList.add('status-success');
-      connectionBadgeText.textContent = 'Connected (200 OK)';
+      el.statusTag.classList.add('status-2xx');
+      el.badgeText.textContent = `Подключено (${status})`;
     } else if (status >= 400 && status < 500) {
-      statusTag.classList.add('status-warn');
-      connectionBadgeText.textContent = `Warning (${status})`;
+      el.statusTag.classList.add('status-4xx');
+      el.badgeText.textContent = `Внимание (${status})`;
     } else {
-      statusTag.classList.add('status-error');
-      connectionBadgeText.textContent = `Error (${status})`;
+      el.statusTag.classList.add('status-5xx');
+      el.badgeText.textContent = `Ошибка (${status || 'Сеть'})`;
     }
 
-    // Update duration badge
-    durationTag.style.display = 'inline-block';
-    durationTag.textContent = `${durationMs} ms`;
+    el.durationTag.textContent = `${durationMs} ms`;
   }
 
   /**
-   * Universal Request Handler
-   */
-  async function executeApiRequest(button, method, path, requestBody = null) {
-    const creds = getCredentials();
-    if (!creds) return;
-
-    const url = `${creds.host}/waInstance${creds.idInstance}/${path}/${creds.apiTokenInstance}`;
-    setLoading(button, true);
-
-    const startTime = performance.now();
-
-    try {
-      const options = {
-        method: method,
-        headers: {}
-      };
-
-      if (requestBody !== null) {
-        options.headers['Content-Type'] = 'application/json';
-        options.body = JSON.stringify(requestBody);
-      }
-
-      const response = await fetch(url, options);
-      const endTime = performance.now();
-      const duration = Math.round(endTime - startTime);
-
-      let responseData;
-      const contentType = response.headers.get('content-type') || '';
-
-      if (contentType.includes('application/json')) {
-        responseData = await response.json();
-      } else {
-        const text = await response.text();
-        try {
-          responseData = JSON.parse(text);
-        } catch {
-          responseData = text || { status: response.status, statusText: response.statusText };
-        }
-      }
-
-      displayResponse(response.status, response.statusText, responseData, duration);
-
-      if (response.ok) {
-        showToast(`Успешный вызов ${path}`, 'success');
-      } else {
-        showToast(`Ошибка ${response.status}: ${response.statusText}`, 'warn');
-      }
-
-    } catch (err) {
-      const endTime = performance.now();
-      const duration = Math.round(endTime - startTime);
-
-      const errorPayload = {
-        error: true,
-        message: err.message || 'Сетевая ошибка или запрос заблокирован',
-        note: 'Проверьте доступность URL и подключение к интернету'
-      };
-
-      displayResponse(0, 'Network Error', errorPayload, duration);
-      showToast('Ошибка сети при отправке запроса', 'error');
-    } finally {
-      setLoading(button, false);
-    }
-  }
-
-  /**
-   * Method: getSettings
-   * GET {{apiUrl}}/waInstance{{idInstance}}/getSettings/{{apiTokenInstance}}
-   */
-  async function handleGetSettings() {
-    await executeApiRequest(btnGetSettings, 'GET', 'getSettings');
-  }
-
-  /**
-   * Method: getStateInstance
-   * GET {{apiUrl}}/waInstance{{idInstance}}/getStateInstance/{{apiTokenInstance}}
-   */
-  async function handleGetStateInstance() {
-    await executeApiRequest(btnGetStateInstance, 'GET', 'getStateInstance');
-  }
-
-  /**
-   * Method: sendMessage
-   * POST {{apiUrl}}/waInstance{{idInstance}}/sendMessage/{{apiTokenInstance}}
+   * Обработчик метода sendMessage
    */
   async function handleSendMessage() {
-    const rawChatId = chatIdMessageInput.value.trim();
-    const message = messageTextInput.value.trim();
+    const rawChatId = el.chatIdMsg.value.trim();
+    const message = el.msgText.value.trim();
 
     if (!rawChatId) {
       showToast('Укажите номер телефона получателя', 'error');
-      chatIdMessageInput.focus();
+      el.chatIdMsg.focus();
       return;
     }
-
     if (!message) {
       showToast('Введите текст сообщения', 'error');
-      messageTextInput.focus();
+      el.msgText.focus();
       return;
     }
 
-    const chatId = formatChatId(rawChatId);
-    const body = {
-      chatId: chatId,
+    const payload = {
+      chatId: formatChatId(rawChatId),
       message: message
     };
 
-    await executeApiRequest(btnSendMessage, 'POST', 'sendMessage', body);
+    await executeRequest(el.btnSendMsg, 'POST', 'sendMessage', payload);
   }
 
   /**
-   * Method: sendFileByUrl
-   * POST {{apiUrl}}/waInstance{{idInstance}}/sendFileByUrl/{{apiTokenInstance}}
+   * Обработчик метода sendFileByUrl
    */
   async function handleSendFileByUrl() {
-    const rawChatId = chatIdFileInput.value.trim();
-    const urlFile = fileUrlInput.value.trim();
+    const rawChatId = el.chatIdFile.value.trim();
+    const urlFile = el.fileUrl.value.trim();
 
     if (!rawChatId) {
       showToast('Укажите номер телефона получателя', 'error');
-      chatIdFileInput.focus();
+      el.chatIdFile.focus();
       return;
     }
-
     if (!urlFile) {
-      showToast('Укажите прямую ссылку на файл', 'error');
-      fileUrlInput.focus();
+      showToast('Укажите ссылку на файл', 'error');
+      el.fileUrl.focus();
       return;
     }
 
-    const chatId = formatChatId(rawChatId);
-    const fileName = extractFileName(urlFile);
-
-    const body = {
-      chatId: chatId,
+    const payload = {
+      chatId: formatChatId(rawChatId),
       urlFile: urlFile,
-      fileName: fileName
+      fileName: getFileNameFromUrl(urlFile)
     };
 
-    await executeApiRequest(btnSendFileByUrl, 'POST', 'sendFileByUrl', body);
+    await executeRequest(el.btnSendFile, 'POST', 'sendFileByUrl', payload);
   }
 
   /**
-   * Helper: Toast notifications
+   * Лаконичные всплывающие уведомления (Toast)
    */
   function showToast(message, type = 'info') {
-    if (!toastContainer) return;
+    if (!el.toastBox) return;
 
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
-    
-    let iconSvg = '';
-    if (type === 'success') {
-      iconSvg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#25d366" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>`;
-    } else if (type === 'error') {
-      iconSvg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`;
-    } else if (type === 'warn') {
-      iconSvg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`;
-    } else {
-      iconSvg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00a884" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>`;
-    }
+    toast.textContent = message;
+    el.toastBox.appendChild(toast);
 
-    toast.innerHTML = `${iconSvg}<span>${message}</span>`;
-    toastContainer.appendChild(toast);
+    requestAnimationFrame(() => toast.classList.add('show'));
 
     setTimeout(() => {
-      toast.style.animation = 'toastOut 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards';
-      setTimeout(() => {
-        if (toast.parentElement) toast.parentElement.removeChild(toast);
-      }, 300);
-    }, 3500);
+      toast.classList.remove('show');
+      setTimeout(() => toast.remove(), 200);
+    }, 2800);
   }
 });
