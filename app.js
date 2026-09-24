@@ -10,7 +10,10 @@ document.addEventListener('DOMContentLoaded', () => {
     apiToken: document.getElementById('apiTokenInstance'),
     apiHost: document.getElementById('apiUrlHost'),
     btnToggleToken: document.getElementById('btnToggleToken'),
-    eyeIcon: document.getElementById('eyeIcon'),
+
+    btnHelp: document.getElementById('btnHelp'),
+    helpOverlay: document.getElementById('helpOverlay'),
+    helpClose: document.getElementById('helpClose'),
 
     btnGetSettings: document.getElementById('btnGetSettings'),
     btnGetStateInstance: document.getElementById('btnGetStateInstance'),
@@ -52,13 +55,37 @@ document.addEventListener('DOMContentLoaded', () => {
   el.apiToken.addEventListener('input', (e) => localStorage.setItem(STORAGE_KEYS.TOKEN, e.target.value.trim()));
   el.apiHost.addEventListener('input', (e) => localStorage.setItem(STORAGE_KEYS.HOST, e.target.value.trim()));
 
-  // 3. Показать / Скрыть пароль токена
+  // 3. Показать / Скрыть пароль токена (анимированный глазок)
   el.btnToggleToken.addEventListener('click', () => {
     const isPass = el.apiToken.type === 'password';
     el.apiToken.type = isPass ? 'text' : 'password';
-    el.eyeIcon.innerHTML = isPass
-      ? '<path d="m2 2 20 20"/><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/>'
-      : '<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>';
+    el.btnToggleToken.setAttribute('aria-pressed', isPass ? 'true' : 'false');
+  });
+
+  // 3b. Модал «Как работает?»
+  function openHelp() {
+    el.helpOverlay.classList.add('is-open');
+    el.helpOverlay.setAttribute('aria-hidden', 'false');
+    el.helpClose.focus();
+  }
+
+  function closeHelp() {
+    el.helpOverlay.classList.remove('is-open');
+    el.helpOverlay.setAttribute('aria-hidden', 'true');
+    el.btnHelp.focus();
+  }
+
+  el.btnHelp.addEventListener('click', openHelp);
+  el.helpClose.addEventListener('click', closeHelp);
+
+  // Закрыть по клику на фон
+  el.helpOverlay.addEventListener('click', (e) => {
+    if (e.target === el.helpOverlay) closeHelp();
+  });
+
+  // Закрыть по Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && el.helpOverlay.classList.contains('is-open')) closeHelp();
   });
 
   // 4. Привязка обработчиков методов GREEN-API
