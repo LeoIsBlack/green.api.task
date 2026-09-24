@@ -1200,3 +1200,321 @@ body {
 .toast-success { border-left: 3px solid var(--green); }
 .toast-error   { border-left: 3px solid #ef4444; }
 .toast-warn    { border-left: 3px solid #f59e0b; }
+
+
+/* ================================================================
+   RESPONSIVE — Адаптив под все устройства
+   ================================================================ */
+
+/* ──────────────── Планшет (≤ 900px) ──────────────── */
+@media (max-width: 900px) {
+  .app-layout {
+    padding: 1rem;
+    align-items: flex-start;
+  }
+
+  .console-card {
+    border-radius: var(--radius-lg);
+  }
+
+  /* Двуколоночный → одноколоночный */
+  .console-grid {
+    grid-template-columns: 1fr;
+    min-height: unset;
+  }
+
+  /* Убираем правую рамку у левой колонки */
+  .col-methods {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Правая колонка — поле ответа */
+  .col-response {
+    min-height: 340px;
+  }
+
+  .response-field {
+    min-height: 260px;
+  }
+
+  .response-box {
+    min-height: 260px;
+  }
+}
+
+/* ──────────────── Мобильный (≤ 640px) ──────────────── */
+@media (max-width: 640px) {
+  .app-layout {
+    padding: 0;
+    align-items: flex-start;
+  }
+
+  .console-card {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    min-height: 100dvh;
+    box-shadow: none;
+  }
+
+  /* ── Шапка ── */
+  .console-header {
+    padding: 0.75rem 1rem;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .header-title h1 {
+    font-size: 0.92rem;
+  }
+
+  .header-sub {
+    display: none;
+  }
+
+  .header-badge {
+    display: none; /* Скрываем на малых — место экономим */
+  }
+
+  .btn-help {
+    font-size: 0.72rem;
+    padding: 4px 10px;
+  }
+
+  /* ── Колонки ── */
+  .col-methods {
+    padding: 0.9rem;
+    gap: 0.75rem;
+  }
+
+  .col-response {
+    padding: 0.9rem;
+    min-height: 300px;
+  }
+
+  /* ── Карточки секций ── */
+  .card-section {
+    padding: 0.8rem;
+    gap: 0.55rem;
+  }
+
+  /* ── Поля ввода ── */
+  .app-input {
+    font-size: 16px; /* предотвращает zoom в iOS */
+    padding: 0.6rem 0.75rem;
+  }
+
+  .app-textarea {
+    min-height: 70px;
+  }
+
+  /* ── Кнопки методов (GET) ── */
+  .btn-group {
+    flex-direction: row;
+    gap: 0.4rem;
+  }
+
+  .btn-group .app-btn {
+    flex: 1;
+    font-size: 0.8rem;
+    padding: 0.55rem 0.5rem;
+  }
+
+  /* ── Кнопка отправки ── */
+  .btn-action {
+    font-size: 0.85rem;
+    padding: 0.6rem 0.85rem;
+  }
+
+  /* ── Вкладки «Выбрать файл / По ссылке» ── */
+  .file-tab {
+    font-size: 0.73rem;
+    padding: 6px 5px;
+  }
+
+  /* ── Зона Drag & Drop ── */
+  .drop-zone {
+    padding: 0.75rem;
+    gap: 10px;
+  }
+
+  .drop-icon-circle {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+  }
+
+  .drop-primary-text {
+    font-size: 0.78rem;
+  }
+
+  .drop-sub-text {
+    font-size: 0.68rem;
+  }
+
+  /* ── Карточка предпросмотра файла ── */
+  .file-preview-card {
+    padding: 7px 8px;
+    gap: 8px;
+  }
+
+  .file-preview-thumb {
+    width: 34px;
+    height: 34px;
+  }
+
+  .file-preview-name {
+    font-size: 0.78rem;
+  }
+
+  /* ── Чипы быстрых ссылок ── */
+  .preset-chips {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .preset-chip {
+    font-size: 0.7rem;
+    padding: 3px 8px;
+  }
+
+  /* ── Правая колонка ── */
+  .response-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .response-tags {
+    flex-wrap: wrap;
+  }
+
+  .response-actions {
+    width: 100%;
+  }
+
+  .btn-sm {
+    font-size: 0.73rem;
+    padding: 4px 8px;
+  }
+
+  .response-field {
+    min-height: 220px;
+    font-size: 0.8rem;
+  }
+
+  .response-box {
+    min-height: 220px;
+  }
+
+  /* ── Футер ── */
+  .console-footer {
+    flex-direction: column;
+    gap: 4px;
+    text-align: center;
+    padding: 0.6rem 1rem;
+    font-size: 0.7rem;
+  }
+
+  /* ── Toast уведомления ── */
+  .toast-container {
+    bottom: 16px;
+    right: 12px;
+    left: 12px;
+  }
+
+  .toast {
+    max-width: 100%;
+    font-size: 0.8rem;
+  }
+
+  /* ── Модальное окно «Как работает?» ── */
+  .help-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .help-modal {
+    max-width: 100%;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    padding: 1.5rem 1.2rem 2rem;
+    transform: translateY(40px);
+  }
+
+  .help-overlay.is-open .help-modal {
+    transform: translateY(0);
+  }
+
+  .help-list li {
+    gap: 0.75rem;
+  }
+
+  /* ── Декоративные орбы — скрываем на мобильных (экономия ресурсов) ── */
+  .bg-orb {
+    display: none;
+  }
+
+  /* ── Курсорное свечение — отключаем на touch-устройствах ── */
+  .cursor-glow {
+    display: none;
+  }
+}
+
+/* ──────────────── Очень маленький (≤ 380px) ──────────────── */
+@media (max-width: 380px) {
+  .console-header {
+    gap: 6px;
+  }
+
+  .header-title h1 {
+    font-size: 0.85rem;
+  }
+
+  .btn-help span:not(svg) {
+    display: none; /* Скрываем текст «Как работает?», оставляем только иконку */
+  }
+
+  .btn-help {
+    padding: 5px 8px;
+  }
+
+  .app-input {
+    font-size: 16px;
+  }
+
+  .btn-group {
+    flex-direction: column;
+  }
+}
+
+/* ──────────────── Большой экран (≥ 1280px) ──────────────── */
+@media (min-width: 1280px) {
+  .console-card {
+    max-width: 1160px;
+  }
+
+  .console-grid {
+    grid-template-columns: 380px 1fr;
+  }
+}
+
+/* ──────────────── Touch-устройства: убираем hover-эффекты ──────────────── */
+@media (hover: none) {
+  .drop-zone:hover {
+    border-color: var(--border-light);
+    background: rgba(0, 0, 0, 0.2);
+    transform: none;
+  }
+
+  .preset-chip:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: var(--border);
+    color: var(--text-secondary);
+    transform: none;
+  }
+
+  .app-btn:hover {
+    box-shadow: none;
+  }
+}
