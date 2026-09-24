@@ -15,6 +15,9 @@
   <div class="bg-orb orb-1" aria-hidden="true"></div>
   <div class="bg-orb orb-2" aria-hidden="true"></div>
 
+  <!-- Световое пятно следует за курсором -->
+  <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+
   <div class="app-layout">
     <div class="console-card">
       <!-- Шапка консоли -->
@@ -184,6 +187,46 @@
   <div id="toastContainer" class="toast-container" aria-live="polite"></div>
 
   <script src="app.js"></script>
+
+  <!-- Анимация следования за курсором -->
+  <script>
+    (function () {
+      const glow = document.getElementById('cursorGlow');
+      if (!glow) return;
+
+      let mx = window.innerWidth / 2;
+      let my = window.innerHeight / 2;
+      let cx = mx, cy = my;
+      let raf;
+
+      // Плавная интерполяция (lerp) — эффект «инерции»
+      function lerp(a, b, t) { return a + (b - a) * t; }
+
+      function animate() {
+        cx = lerp(cx, mx, 0.07);
+        cy = lerp(cy, my, 0.07);
+        glow.style.transform = `translate(${cx}px, ${cy}px)`;
+        raf = requestAnimationFrame(animate);
+      }
+
+      document.addEventListener('mousemove', (e) => {
+        mx = e.clientX;
+        my = e.clientY;
+        glow.style.opacity = '1';
+      });
+
+      // Скрываем когда курсор уходит из окна
+      document.addEventListener('mouseleave', () => {
+        glow.style.opacity = '0';
+      });
+
+      document.addEventListener('mouseenter', () => {
+        glow.style.opacity = '1';
+      });
+
+      animate();
+    })();
+  </script>
 </body>
 
 </html>

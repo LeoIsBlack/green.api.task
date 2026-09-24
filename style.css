@@ -2,6 +2,32 @@
    GREEN-API Console — Balanced Dark Theme
    ========================================================================== */
 
+/* ========== Световое пятно за курсором ========== */
+.cursor-glow {
+  position: fixed;
+  top: 0; left: 0;
+  width: 500px; height: 500px;
+  /* Яркий cyan / teal — не зелёный, но из той же семьи */
+  background: radial-gradient(
+    circle at center,
+    rgba(20, 255, 200, 0.13) 0%,
+    rgba(20, 220, 180, 0.06) 35%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  /* Центрируем относительно позиции (translate смещает из верхнего-левого угла) */
+  margin-left: -250px;
+  margin-top: -250px;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  /* mix-blend-mode делает свечение мягче поверх тёмного фона */
+  mix-blend-mode: screen;
+  will-change: transform;
+}
+
+
 :root {
   /* Нейтральный тёмный фон (не зелёный) */
   --bg-deep: #0f1117;
