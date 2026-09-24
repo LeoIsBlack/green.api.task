@@ -61,15 +61,6 @@ start index.html
 
 ## Публикация на GitHub Pages
 
-1. Репозиторий на [GitHub](https://github.com/LeoIsBlack/green.api.task): **`green.api.task`**
-2. Отправьте код из терминала:
-   ```bash
-   git push -u origin main
-   ```
-3. В настройках репозитория на GitHub перейдите в **Settings** -> **Pages**:
-   - В разделе **Branch** выберите `main` и ветку `/ (root)`.
-   - Нажмите **Save**.
-4. Через минуту ваша страница станет доступна по адресу:
    **https://LeoIsBlack.github.io/green.api.task/**
 
 ---
