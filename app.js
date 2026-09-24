@@ -23,8 +23,26 @@ document.addEventListener('DOMContentLoaded', () => {
     btnSendMsg: document.getElementById('btnSendMessage'),
 
     chatIdFile: document.getElementById('chatIdFile'),
+    fileMethodName: document.getElementById('fileMethodName'),
     fileUrl: document.getElementById('fileUrl'),
-    btnSendFile: document.getElementById('btnSendFileByUrl'),
+    fileCaption: document.getElementById('fileCaption'),
+    btnSendFile: document.getElementById('btnSendFile'),
+    btnSendFileText: document.getElementById('btnSendFileText'),
+
+    // Режимы отправки файла
+    tabByFile: document.getElementById('tabByFile'),
+    tabByUrl: document.getElementById('tabByUrl'),
+    panelFile: document.getElementById('panelFile'),
+    panelUrl: document.getElementById('panelUrl'),
+
+    // Выбор файла с устройства
+    fileInput: document.getElementById('fileInput'),
+    dropZone: document.getElementById('dropZone'),
+    filePreviewCard: document.getElementById('filePreviewCard'),
+    filePreviewThumb: document.getElementById('filePreviewThumb'),
+    filePreviewName: document.getElementById('filePreviewName'),
+    filePreviewSize: document.getElementById('filePreviewSize'),
+    btnRemoveFile: document.getElementById('btnRemoveFile'),
 
     responseOutput: document.getElementById('responseOutput'),
     responseEmpty: document.getElementById('responseEmpty'),
@@ -35,6 +53,10 @@ document.addEventListener('DOMContentLoaded', () => {
     badgeText: document.getElementById('connectionBadgeText'),
     toastBox: document.getElementById('toastContainer')
   };
+
+  // Состояние выбора файла
+  let fileMode = 'file';       // 'file' (с устройства) | 'url' (по ссылке)
+  let selectedFile = null;     // Выбранный объект File
 
   // Ключи LocalStorage для сохранения данных инстанса
   const STORAGE_KEYS = {
@@ -88,11 +110,128 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'Escape' && el.helpOverlay.classList.contains('is-open')) closeHelp();
   });
 
-  // 4. Привязка обработчиков методов GREEN-API
+  // 4. Переключение вкладок: С устройства / По ссылке
+  function switchFileTab(mode) {
+    fileMode = mode;
+    if (mode === 'file') {
+      el.tabByFile.classList.add('active');
+      el.tabByUrl.classList.remove('active');
+      el.panelFile.style.display = 'block';
+      el.panelUrl.style.display = 'none';
+      if (el.fileMethodName) el.fileMethodName.textContent = 'sendFileByUpload';
+      if (el.btnSendFileText) el.btnSendFileText.textContent = 'Отправить выбранный файл';
+    } else {
+      el.tabByUrl.classList.add('active');
+      el.tabByFile.classList.remove('active');
+      el.panelFile.style.display = 'none';
+      el.panelUrl.style.display = 'block';
+      if (el.fileMethodName) el.fileMethodName.textContent = 'sendFileByUrl';
+      if (el.btnSendFileText) el.btnSendFileText.textContent = 'Отправить файл по ссылке';
+    }
+  }
+
+  el.tabByFile.addEventListener('click', () => switchFileTab('file'));
+  el.tabByUrl.addEventListener('click', () => switchFileTab('url'));
+
+  // Быстрые примеры ссылок на файлы в 1 клик
+  document.querySelectorAll('.preset-chip').forEach((chip) => {
+    chip.addEventListener('click', () => {
+      const url = chip.getAttribute('data-url');
+      if (url && el.fileUrl) {
+        el.fileUrl.value = url;
+        el.fileUrl.focus();
+        showToast('Пример ссылки вставлен', 'info');
+      }
+    });
+  });
+
+  // Форматирование размера файла для предпросмотра
+  function formatBytes(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+  }
+
+  // Обработка выбранного файла (из проводника или Drag & Drop)
+  function handleFileSelected(file) {
+    if (!file) return;
+    selectedFile = file;
+
+    el.filePreviewName.textContent = file.name;
+    el.filePreviewSize.textContent = formatBytes(file.size);
+
+    el.filePreviewThumb.innerHTML = '';
+    if (file.type.startsWith('image/')) {
+      const img = document.createElement('img');
+      img.src = URL.createObjectURL(file);
+      img.alt = file.name;
+      el.filePreviewThumb.appendChild(img);
+    } else {
+      const ext = (file.name.split('.').pop() || 'FILE').toUpperCase().slice(0, 4);
+      const badge = document.createElement('span');
+      badge.className = 'file-icon-badge';
+      badge.textContent = ext;
+      el.filePreviewThumb.appendChild(badge);
+    }
+
+    el.dropZone.style.display = 'none';
+    el.filePreviewCard.style.display = 'flex';
+    showToast(`Файл выбран: ${file.name}`, 'info');
+  }
+
+  // Сброс выбранного файла
+  function clearSelectedFile() {
+    selectedFile = null;
+    el.fileInput.value = '';
+    el.filePreviewThumb.innerHTML = '';
+    el.filePreviewCard.style.display = 'none';
+    el.dropZone.style.display = 'flex';
+  }
+
+  // Клик по дропзоне открывает выбор файла
+  el.dropZone.addEventListener('click', () => el.fileInput.click());
+  el.dropZone.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      el.fileInput.click();
+    }
+  });
+
+  // Drag & Drop
+  el.dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    el.dropZone.classList.add('drag-over');
+  });
+  el.dropZone.addEventListener('dragleave', () => {
+    el.dropZone.classList.remove('drag-over');
+  });
+  el.dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    el.dropZone.classList.remove('drag-over');
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      handleFileSelected(e.dataTransfer.files[0]);
+    }
+  });
+
+  // Выбор файла через стандартное системное окно
+  el.fileInput.addEventListener('change', () => {
+    if (el.fileInput.files && el.fileInput.files[0]) {
+      handleFileSelected(el.fileInput.files[0]);
+    }
+  });
+
+  // Удаление файла
+  el.btnRemoveFile.addEventListener('click', (e) => {
+    e.stopPropagation();
+    clearSelectedFile();
+  });
+
+  // 5. Привязка обработчиков методов GREEN-API
   el.btnGetSettings.addEventListener('click', () => executeRequest(el.btnGetSettings, 'GET', 'getSettings'));
   el.btnGetStateInstance.addEventListener('click', () => executeRequest(el.btnGetStateInstance, 'GET', 'getStateInstance'));
   el.btnSendMsg.addEventListener('click', handleSendMessage);
-  el.btnSendFile.addEventListener('click', handleSendFileByUrl);
+  el.btnSendFile.addEventListener('click', handleSendFile);
+
 
   // 5. Очистка и копирование ответа
   el.btnClear.addEventListener('click', () => {
@@ -179,7 +318,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const creds = getCredentials();
     if (!creds) return;
 
-    const url = `${creds.host}/waInstance${creds.idInstance}/${apiMethod}/${creds.apiTokenInstance}`;
+    let host = creds.host;
+    // Для методов загрузки файлов официальная документация GREEN-API рекомендует media-хост
+    if (apiMethod === 'sendFileByUpload' || apiMethod === 'uploadFile') {
+      if (host.includes('api.green-api.com')) {
+        host = host.replace('api.green-api.com', 'media.green-api.com');
+      } else if (host.includes('.api.greenapi.com')) {
+        host = host.replace('.api.greenapi.com', '.media.greenapi.com');
+      }
+    }
+
+    const url = `${host}/waInstance${creds.idInstance}/${apiMethod}/${creds.apiTokenInstance}`;
 
     button.classList.add('is-loading');
     button.disabled = true;
@@ -193,11 +342,28 @@ document.addEventListener('DOMContentLoaded', () => {
       };
 
       if (payload !== null) {
-        requestOptions.headers['Content-Type'] = 'application/json';
-        requestOptions.body = JSON.stringify(payload);
+        if (payload instanceof FormData) {
+          // При FormData браузер сам установит Content-Type с boundary
+          requestOptions.body = payload;
+        } else {
+          requestOptions.headers['Content-Type'] = 'application/json';
+          requestOptions.body = JSON.stringify(payload);
+        }
       }
 
-      const response = await fetch(url, requestOptions);
+      let response;
+      try {
+        response = await fetch(url, requestOptions);
+      } catch (fetchErr) {
+        // Если media-хост недоступен, пробуем базовый host инстанса
+        if (host !== creds.host) {
+          const fallbackUrl = `${creds.host}/waInstance${creds.idInstance}/${apiMethod}/${creds.apiTokenInstance}`;
+          response = await fetch(fallbackUrl, requestOptions);
+        } else {
+          throw fetchErr;
+        }
+      }
+
       const duration = Math.round(performance.now() - startTime);
 
       let responseData;
@@ -209,7 +375,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       renderResponse(response.status, response.statusText, responseData, duration);
-      showToast(response.ok ? `Успешно: ${apiMethod}` : `Ошибка ${response.status}`, response.ok ? 'success' : 'warn');
+      showToast(response.ok ? `Успешно: ${apiMethod}` : `Ответ ${response.status}`, response.ok ? 'success' : 'warn');
 
     } catch (err) {
       const duration = Math.round(performance.now() - startTime);
@@ -278,30 +444,52 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /**
-   * Обработчик метода sendFileByUrl
+   * Обработчик отправки файла: С устройства (sendFileByUpload) или по ссылке (sendFileByUrl)
    */
-  async function handleSendFileByUrl() {
+  async function handleSendFile() {
     const rawChatId = el.chatIdFile.value.trim();
-    const urlFile = el.fileUrl.value.trim();
 
     if (!rawChatId) {
       showToast('Укажите номер телефона получателя', 'error');
       el.chatIdFile.focus();
       return;
     }
-    if (!urlFile) {
-      showToast('Укажите ссылку на файл', 'error');
-      el.fileUrl.focus();
-      return;
+
+    if (fileMode === 'file') {
+      if (!selectedFile) {
+        showToast('Выберите файл на устройстве или перетащите его', 'error');
+        el.fileInput.click();
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('chatId', formatChatId(rawChatId));
+      formData.append('file', selectedFile, selectedFile.name);
+      formData.append('fileName', selectedFile.name);
+
+      const caption = el.fileCaption ? el.fileCaption.value.trim() : '';
+      if (caption) {
+        formData.append('caption', caption);
+      }
+
+      await executeRequest(el.btnSendFile, 'POST', 'sendFileByUpload', formData);
+
+    } else {
+      const urlFile = el.fileUrl.value.trim();
+      if (!urlFile) {
+        showToast('Укажите ссылку на файл или выберите пример', 'error');
+        el.fileUrl.focus();
+        return;
+      }
+
+      const payload = {
+        chatId: formatChatId(rawChatId),
+        urlFile: urlFile,
+        fileName: getFileNameFromUrl(urlFile)
+      };
+
+      await executeRequest(el.btnSendFile, 'POST', 'sendFileByUrl', payload);
     }
-
-    const payload = {
-      chatId: formatChatId(rawChatId),
-      urlFile: urlFile,
-      fileName: getFileNameFromUrl(urlFile)
-    };
-
-    await executeRequest(el.btnSendFile, 'POST', 'sendFileByUrl', payload);
   }
 
   /**

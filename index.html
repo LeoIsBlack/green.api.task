@@ -91,8 +91,8 @@
             <li>
               <span class="help-step">6</span>
               <div>
-                <strong>Отправьте файл по ссылке</strong>
-                <p>В блоке <code>sendFileByUrl</code> укажите номер и прямую ссылку на файл. Имя файла определяется из URL автоматически.</p>
+                <strong>Отправьте файл</strong>
+                <p>Выберите файл прямо с устройства (<code>sendFileByUpload</code>) либо укажите прямую ссылку (<code>sendFileByUrl</code>). Доступны быстрые примеры файлов в 1 клик.</p>
               </div>
             </li>
           </ol>
@@ -177,26 +177,89 @@
             </button>
           </div>
 
-          <!-- Отправка файла по URL (sendFileByUrl) -->
+          <!-- Отправка файла (С устройства / По ссылке) -->
           <div class="card-section">
             <div class="section-label">
               <span class="method-badge post">POST</span>
-              sendFileByUrl
+              <span id="fileMethodName">sendFileByUpload</span>
             </div>
             <div class="input-wrap">
               <label for="chatIdFile" class="sr-only">Номер получателя</label>
               <input type="text" id="chatIdFile" class="app-input" placeholder="87761985879" autocomplete="off">
             </div>
-            <div class="input-wrap">
-              <label for="fileUrl" class="sr-only">Ссылка на файл</label>
-              <input type="url" id="fileUrl" class="app-input" placeholder="https://my.site.com/img/horse.png"
-                autocomplete="off">
+
+            <!-- Переключатель: С устройства / По ссылке -->
+            <div class="file-tabs">
+              <button type="button" class="file-tab active" id="tabByFile">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px; vertical-align: -1px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Выбрать файл
+              </button>
+              <button type="button" class="file-tab" id="tabByUrl">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px; vertical-align: -1px;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                По ссылке
+              </button>
             </div>
-            <button type="button" id="btnSendFileByUrl" class="app-btn btn-action btn-post">
+
+            <!-- Панель: Выбор файла с устройства -->
+            <div id="panelFile">
+              <input type="file" id="fileInput" class="sr-only">
+              
+              <!-- Зона клика / Drag & Drop -->
+              <div class="drop-zone" id="dropZone" role="button" tabindex="0">
+                <div class="drop-icon-circle">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="17 8 12 3 7 8"/>
+                    <line x1="12" y1="3" x2="12" y2="15"/>
+                  </svg>
+                </div>
+                <div class="drop-text-group">
+                  <span class="drop-primary-text">Нажмите или перетащите файл</span>
+                  <span class="drop-sub-text">Фото, видео, PDF, документы (до 100 МБ)</span>
+                </div>
+              </div>
+
+              <!-- Карточка выбранного файла (появляется при выборе) -->
+              <div class="file-preview-card" id="filePreviewCard" style="display: none;">
+                <div class="file-preview-thumb" id="filePreviewThumb"></div>
+                <div class="file-preview-details">
+                  <span class="file-preview-name" id="filePreviewName">filename.ext</span>
+                  <span class="file-preview-size" id="filePreviewSize">0 KB</span>
+                </div>
+                <button type="button" class="file-remove-btn" id="btnRemoveFile" title="Удалить файл" aria-label="Удалить файл">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                </button>
+              </div>
+
+              <!-- Опциональная подпись к файлу -->
+              <div class="input-wrap" style="margin-top: 6px;">
+                <label for="fileCaption" class="sr-only">Подпись к файлу</label>
+                <input type="text" id="fileCaption" class="app-input" placeholder="Подпись к файлу (необязательно)" autocomplete="off">
+              </div>
+            </div>
+
+            <!-- Панель: По прямой ссылке (URL) -->
+            <div id="panelUrl" style="display: none;">
+              <div class="input-wrap">
+                <label for="fileUrl" class="sr-only">Ссылка на файл</label>
+                <input type="url" id="fileUrl" class="app-input" placeholder="https://green-api.com/docs/images/logo.png" autocomplete="off">
+              </div>
+              <div class="file-presets">
+                <span class="presets-title">Примеры в 1 клик:</span>
+                <div class="preset-chips">
+                  <button type="button" class="preset-chip" data-url="https://green-api.com/docs/images/logo.png">🖼️ PNG лого</button>
+                  <button type="button" class="preset-chip" data-url="https://picsum.photos/600/400.jpg">📷 JPG фото</button>
+                  <button type="button" class="preset-chip" data-url="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf">📄 PDF файл</button>
+                </div>
+              </div>
+            </div>
+
+            <button type="button" id="btnSendFile" class="app-btn btn-action btn-post">
               <span class="spinner"></span>
-              <span class="btn-text">Отправить файл</span>
+              <span class="btn-text" id="btnSendFileText">Отправить выбранный файл</span>
             </button>
           </div>
+
 
           <!-- Настройка хоста API -->
           <details class="host-details">
