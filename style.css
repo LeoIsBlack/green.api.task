@@ -1,9 +1,8 @@
 /* ==========================================================================
-   GREEN-API Console — Стили и оформление
+   GREEN-API Console — Компактные оптимизированные стили
    ========================================================================== */
 
 :root {
-  /* Палитра */
   --bg-page: #0c1317;
   --bg-card: #111b21;
   --bg-section: #1c272e;
@@ -11,31 +10,21 @@
   --bg-input-focus: #182229;
   --border: #2a3942;
   --border-subtle: #222e35;
-
   --text-primary: #e9edef;
   --text-secondary: #8696a0;
   --text-muted: #667781;
   --text-placeholder: #54656f;
-
-  --green-main: #00a884;
+  --green: #00a884;
   --green-hover: #06cf9c;
-  --green-active: #029474;
   --green-glow: rgba(0, 168, 132, 0.2);
-
   --btn-bg: #202c33;
   --btn-border: #374248;
   --btn-hover: #2a3942;
-
-  /* Обычные системные шрифты (без внешних загрузок) */
   --font-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-mono: Consolas, "Courier New", monospace;
-
   --radius: 8px;
-  --radius-lg: 14px;
-  --transition: 0.18s ease-in-out;
 }
 
-/* Сброс стилей */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -44,9 +33,7 @@
 
 body {
   min-height: 100vh;
-  background-color: var(--bg-page);
-  background-image: radial-gradient(circle at 10% 20%, rgba(0, 168, 132, 0.06) 0%, transparent 40%),
-                    radial-gradient(circle at 90% 80%, rgba(37, 211, 102, 0.04) 0%, transparent 40%);
+  background: var(--bg-page) radial-gradient(circle at 10% 20%, rgba(0, 168, 132, 0.06) 0%, transparent 40%);
   color: var(--text-primary);
   font-family: var(--font-base);
   font-size: 14px;
@@ -62,11 +49,10 @@ body {
   margin: -1px;
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
+  border: 0;
 }
 
-/* Разметка */
+/* Разметка карточки */
 .app-layout {
   display: flex;
   justify-content: center;
@@ -80,7 +66,7 @@ body {
   max-width: 1060px;
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
+  border-radius: 14px;
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
   overflow: hidden;
 }
@@ -104,15 +90,14 @@ body {
 .header-title h1 {
   font-size: 1.05rem;
   font-weight: 600;
-  letter-spacing: 0.01em;
 }
 
 .status-dot {
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  background-color: var(--green-main);
-  box-shadow: 0 0 8px var(--green-main);
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
 }
 
 .header-status {
@@ -130,7 +115,7 @@ body {
   grid-template-columns: 340px 1fr;
   gap: 1.5rem;
   padding: 1.5rem;
-  min-height: 580px;
+  min-height: 560px;
 }
 
 @media (max-width: 820px) {
@@ -177,7 +162,7 @@ body {
   margin-top: 0.5rem;
 }
 
-/* Поля ввода */
+/* Элементы формы */
 .app-input {
   width: 100%;
   background: var(--bg-input);
@@ -188,7 +173,7 @@ body {
   font-size: 0.9rem;
   padding: 0.6rem 0.75rem;
   outline: none;
-  transition: border-color var(--transition), box-shadow var(--transition);
+  transition: border-color 0.18s, box-shadow 0.18s;
 }
 
 .app-input::placeholder {
@@ -197,7 +182,7 @@ body {
 
 .app-input:focus {
   background: var(--bg-input-focus);
-  border-color: var(--green-main);
+  border-color: var(--green);
   box-shadow: 0 0 0 2px var(--green-glow);
 }
 
@@ -216,7 +201,6 @@ body {
   cursor: pointer;
   padding: 4px;
   display: flex;
-  align-items: center;
 }
 
 .btn-icon:hover {
@@ -235,7 +219,7 @@ body {
   background: #0b141a;
 }
 
-/* Кнопки вызова методов */
+/* Кнопки */
 .app-btn {
   display: inline-flex;
   align-items: center;
@@ -250,7 +234,7 @@ body {
   font-size: 0.88rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all var(--transition);
+  transition: background 0.18s, border-color 0.18s;
   user-select: none;
 }
 
@@ -286,7 +270,6 @@ body {
   to { transform: rotate(360deg); }
 }
 
-/* Спойлер параметров хоста */
 .host-details {
   font-size: 0.8rem;
   color: var(--text-muted);
@@ -299,11 +282,7 @@ body {
   user-select: none;
 }
 
-.host-details summary:hover {
-  color: var(--text-secondary);
-}
-
-/* Правая колонка — вывод ответа */
+/* Правая колонка ответа */
 .col-response {
   display: flex;
   flex-direction: column;
@@ -329,10 +308,13 @@ body {
   gap: 6px;
 }
 
-.tag-status {
+.tag-status, .tag-duration {
   font-size: 0.74rem;
-  font-weight: 600;
   font-family: var(--font-mono);
+}
+
+.tag-status {
+  font-weight: 600;
   padding: 2px 7px;
   border-radius: 4px;
 }
@@ -349,16 +331,14 @@ body {
   border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
-.status-5xx, .status-err {
+.status-5xx {
   background: rgba(239, 68, 68, 0.15);
   color: #f87171;
   border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
 .tag-duration {
-  font-size: 0.74rem;
   color: var(--text-muted);
-  font-family: var(--font-mono);
 }
 
 .btn-sm {
@@ -369,7 +349,7 @@ body {
   padding: 3px 8px;
   border-radius: 4px;
   cursor: pointer;
-  transition: all var(--transition);
+  transition: all 0.18s;
 }
 
 .btn-sm:hover {
@@ -410,7 +390,7 @@ body {
   font-style: italic;
 }
 
-/* Уведомления (Toast) */
+/* Toast */
 .toast-container {
   position: fixed;
   bottom: 20px;
@@ -433,7 +413,7 @@ body {
   pointer-events: auto;
   opacity: 0;
   transform: translateY(10px);
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: opacity 0.2s, transform 0.2s;
 }
 
 .toast.show {
@@ -441,6 +421,6 @@ body {
   transform: translateY(0);
 }
 
-.toast-success { border-left: 3px solid var(--green-main); }
+.toast-success { border-left: 3px solid var(--green); }
 .toast-error { border-left: 3px solid #ef4444; }
 .toast-warn { border-left: 3px solid #f59e0b; }
